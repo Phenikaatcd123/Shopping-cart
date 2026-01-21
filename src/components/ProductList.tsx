@@ -1,5 +1,6 @@
 import { useProducts } from "../hooks/useProducts";
 import ProductItem from "./ProductItem";
+import "../styles/product.css";
 
 export default function ProductList() {
   const { products, loading, error } = useProducts();
