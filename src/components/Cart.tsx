@@ -1,7 +1,10 @@
 import Button from "./ui/Button";
 import { useCart } from "../context/CartContext";
 import "../styles/cart.css";
-
+import plusIcon from "./assets/icons/plus-large-svgrepo-com.svg"
+import minusIcon from "./assets/icons/minus-svgrepo-com.svg"
+import trashIcon from "./assets/icons/trash-svgrepo-com.svg"
+import cartIcon from "./assets/icons/shopping-cart-svgrepo-com.svg"
 export default function Cart() {
   const {
     cart,
@@ -13,7 +16,7 @@ export default function Cart() {
   } = useCart();
 
   if (cart.length === 0) {
-    return <p className="cart-empty">Your cart is empty 🛒</p>;
+    return <p className="cart-empty">Your cart is empty <img src={cartIcon} alt="cartIcon" /></p>;
   }
 
   return (
@@ -38,7 +41,7 @@ export default function Cart() {
                 disabled={item.quantity === 0}
                 onClick={() => decrease(item.id)}
               >
-                -
+                <img src={minusIcon} alt="Decrease quantity" />
               </Button>
 
               <span>{item.quantity}</span>
@@ -48,7 +51,7 @@ export default function Cart() {
                 variant="ghost"
                 onClick={() => increase(item.id)}
               >
-                +
+                <img src={plusIcon} alt="Increase quantity" />
               </Button>
             </div>
           </div>
@@ -58,7 +61,7 @@ export default function Cart() {
             variant="danger"
             onClick={() => removeItem(item.id)}
           >
-            Remove
+            <img src={trashIcon} alt="Remove item"/>Remove
           </Button>
         </div>
       ))}
