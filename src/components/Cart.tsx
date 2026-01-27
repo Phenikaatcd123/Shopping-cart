@@ -1,77 +1,91 @@
-import Button from "./ui/Button";
+import { memo, useCallback, useMemo } from "react";
+import type { CartItem as CartItemType } from "../types/product";
 import { useCart } from "../context/CartContext";
-import "../styles/cart.css";
-export default function Cart() {
-  const {
-    cart,
-    increase,
-    decrease,
-    removeItem,
-    clearCart,
-    total
-  } = useCart();
 
-  if (cart.length === 0) {
-    return <p className="cart-empty">Your cart is empty 🛒</p>;
+/* =======================
+ * CART ITEM COMPONENT
+ * ======================= */
+interface CartItemProps {
+  item: CartItemType;
+}
+
+const CartItem = memo(function CartItem({ item }: CartItemProps) {
+  const { increase, decrease } = useCart();
+
+  const handleIncrease = useCallback(() => {
+    increase(item.id);
+  }, [increase, item.id]);
+
+  const handleDecrease = useCallback(() => {
+    decrease(item.id);
+  }, [decrease, item.id]);
+
+  return (
+    <div className="cart-item">
+      <img
+        src={item.image}
+        alt={item.title}
+        className="cart-item-image"
+      />
+
+      <div className="cart-item-info">
+        <h4 className="cart-item-title">{item.title}</h4>
+        <p className="cart-item-price">${item.price.toFixed(2)}</p>
+
+        <div className="cart-item-actions">
+          <button
+            onClick={handleDecrease}
+            disabled={item.quantity === 0}
+            className="btn"
+          >
+            -
+          </button>
+
+          <span className="cart-item-quantity">{item.quantity}</span>
+
+          <button
+            onClick={handleIncrease}
+            className="btn"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+
+export default function Cart() {
+  const { items } = useCart();
+
+  const totalPrice = useMemo(() => {
+    return items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+  }, [items]);
+
+  if (items.length === 0) {
+    return <p className="cart-empty">Your cart is empty.</p>;
   }
 
   return (
-    <div className="cart-wrapper">
-      <h2>Your Cart</h2>
+    <aside className="cart">
+      <h2 className="cart-title">Shopping Cart</h2>
 
-      {cart.map(item => (
-        <div className="cart-item" key={item.id}>
-          <img
-            src={item.image}
-            alt={item.title}
-          />
-
-          <div className="cart-info">
-            <p className="cart-title">{item.title}</p>
-            <p className="cart-price">${item.price}</p>
-
-            <div className="qty-control">
-              <Button
-                size="sm"
-                variant="ghost"
-                disabled={item.quantity === 0}
-                onClick={() => decrease(item.id)}
-              >
-                 Decease ➖
-              </Button>
-        
-              <span>{item.quantity}</span>
-
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => increase(item.id)}
-              >
-                Add more ➕
-              </Button>
-            </div>
-          </div>
-
-          <Button
-            size="sm"
-            variant="danger"
-            onClick={() => removeItem(item.id)}
-          >
-            Remove ❎
-          </Button>
-        </div>
-      ))}
+      <div className="cart-list">
+        {items.map((item) => (
+          <CartItem key={item.id} item={item} />
+        ))}
+      </div>
 
       <div className="cart-footer">
-        <p>Total: <b>${total.toFixed(2)}</b></p>
-
-        <Button
-          variant="danger"
-          onClick={clearCart}
-        >
-          Clear cart
-        </Button>
+        <span className="cart-total-label">Total:</span>
+        <span className="cart-total-price">
+          ${totalPrice.toFixed(2)}
+        </span>
       </div>
-    </div>
+    </aside>
   );
 }

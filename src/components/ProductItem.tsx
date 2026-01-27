@@ -1,28 +1,30 @@
+import { memo } from "react";
 import type { Product } from "../types/product";
-import { useCart } from "../context/CartContext";
-import toast from "react-hot-toast";
+import { useModal } from "../hooks/useModal";
+import ProductDetailModal from "./ProductDetailModal";
 
 interface Props {
-  readonly product: Product;
+  product: Product;
 }
 
-export default function ProductItem({ product }: Props) {
-  const { addToCart } = useCart();
-
-  const handleAdd = () => {
-    addToCart(product);
-    toast.success("Added to cart!");
-  };
+function ProductItem({ product }: Props) {
+  const modal = useModal <Product>();
 
   return (
-    <div className="card">
-      <img src={product.image} alt={product.title} />
-      <h4>{product.title}</h4>
-      <p>${product.price}</p>
+    <>
+      <div className="product-card" onClick={() => modal.open(product)}>
+        <img src={product.image} alt={product.title} />
+        <h4>{product.title}</h4>
+      </div>
 
-      <button onClick={handleAdd}>
-        Add to cart
-      </button>
-    </div>
+      {modal.isOpen && modal.data && (
+        <ProductDetailModal
+          product={modal.data}
+          onClose={modal.close}
+        />
+      )}
+    </>
   );
 }
+
+export default memo(ProductItem);

@@ -1,12 +1,7 @@
 interface BadgeProps {
-    value: number;
-} 
+  value: number;
+}
 
-export default function Badge({ value}: BadgeProps) {
-    return (
-        <span
-        className="badge">
-            {value}
-        </span>
-    );
+export default function Badge({ value }: BadgeProps) {
+  return <span className="badge">{value}</span>;
 }
