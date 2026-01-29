@@ -1,15 +1,20 @@
-import ProductList from "./components/ProductList";
-import Cart from "./components/Cart";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { routes } from "./routes/routes";
 
-export default function App() {
+function App() {
   return (
-    <>
-      <h1>🛒 Shopping Cart (TypeScript)</h1>
-
-      <div className="layout">
-        <ProductList />
-        <Cart />
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {routes.map((route, index) => (
+          <Route
+            key={index}
+            path={route.path}
+            element={route.element}
+          />
+        ))}
+      </Routes>
+    </BrowserRouter>
   );
 }
+
+export default App;
