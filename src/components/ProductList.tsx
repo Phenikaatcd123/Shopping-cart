@@ -7,9 +7,7 @@ import FilterBar from "./FilterBar";
 import { useDebounce } from "../hooks/useDebounce";
 
 export default function ProductList() {
-  /* =======================
-   * STATE
-   * ======================= */
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,14 +15,8 @@ export default function ProductList() {
   const [search, setSearch] = useState<string>("");
   const [category, setCategory] = useState<string>("");
 
-  /* =======================
-   * DEBOUNCE SEARCH
-   * ======================= */
   const debouncedSearch = useDebounce(search, 500);
 
-  /* =======================
-   * FETCH PRODUCTS
-   * ======================= */
   useEffect(() => {
     const loadProducts = async () => {
       try {
@@ -41,9 +33,7 @@ export default function ProductList() {
     loadProducts();
   }, []);
 
-  /* =======================
-   * FILTER + SEARCH LOGIC
-   * ======================= */
+
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const matchSearch = product.title
@@ -57,9 +47,7 @@ export default function ProductList() {
     });
   }, [products, debouncedSearch, category]);
 
-  /* =======================
-   * RENDER STATES
-   * ======================= */
+
   if (loading) {
     return <p className="status-text">Loading products...</p>;
   }
@@ -68,12 +56,9 @@ export default function ProductList() {
     return <p className="status-text error">{error}</p>;
   }
 
-  /* =======================
-   * RENDER UI
-   * ======================= */
+
   return (
     <section className="product-list">
-      {/* SEARCH + FILTER */}
       <div className="product-toolbar">
         <SearchBar value={search} onChange={setSearch} />
         <FilterBar
@@ -82,7 +67,6 @@ export default function ProductList() {
         />
       </div>
 
-      {/* PRODUCT GRID */}
       {filteredProducts.length === 0 ? (
         <p className="status-text">No products found.</p>
       ) : (

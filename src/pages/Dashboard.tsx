@@ -21,7 +21,7 @@ function Dashboard() {
 
         <div>
           <Link to="/users">Manage Users</Link>
-          <button onClick={logout}>Logout</button>
+          <button onClick={logout}>Log out</button>
         </div>
       </header>
 
@@ -32,6 +32,8 @@ function Dashboard() {
       />
 
       <ProductList search={search} />
+
+      <Link to="/products">Manage Products</Link>
     </div>
   );
 }
