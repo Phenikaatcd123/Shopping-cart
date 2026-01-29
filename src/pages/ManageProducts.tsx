@@ -94,7 +94,11 @@ function ManageProducts() {
         setProducts((prev) => [created, ...prev]);
       }
 
-      resetForm();
+      setTitle("");
+      setImage("");
+      setPrice("");
+
+      setCurrentPage(1);
     } catch {
       alert("API Error");
     } finally {
@@ -174,7 +178,7 @@ function ManageProducts() {
         {/* LIST */}
       <h3>Products</h3>
 
-      {products.map((p) => (
+      {currentProducts.map((p) => (
         <div key={p.id} className="product-row">
           <img src={p.image} width={50} alt="image here"/>
 
@@ -189,6 +193,34 @@ function ManageProducts() {
           </button>
         </div>
       ))}
+
+      {/* PAGINATION */}
+<div className="pagination">
+  <button
+    disabled={currentPage === 1}
+    onClick={() => setCurrentPage((p) => p - 1)}
+  >
+    Prev
+  </button>
+
+  {Array.from({ length: totalPages }).map((_, i) => (
+    <button
+      key={i}
+      className={currentPage === i + 1 ? "active" : ""}
+      onClick={() => setCurrentPage(i + 1)}
+    >
+      {i + 1}
+    </button>
+  ))}
+
+  <button
+    disabled={currentPage === totalPages}
+    onClick={() => setCurrentPage((p) => p + 1)}
+  >
+    Next
+  </button>
+</div>
+
     </div>
   );
 }
