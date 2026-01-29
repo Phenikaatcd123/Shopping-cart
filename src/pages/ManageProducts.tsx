@@ -21,8 +21,9 @@ function ManageProducts() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
   
+  const[currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   useEffect(() => {
     fetch(API)
       .then((res) => res.json())
@@ -126,6 +127,11 @@ function ManageProducts() {
     setEditingId(null);
   };
 
+  const totalPages = Math.ceil(products.length / pageSize);
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+
+  const currentProducts =  products.slice(start, end);
   return (
     <div className="page-container">
       <h2>Manage Products</h2>
@@ -164,7 +170,8 @@ function ManageProducts() {
         )}
       </div>
 
-      {/* LIST */}
+
+        {/* LIST */}
       <h3>Products</h3>
 
       {products.map((p) => (
@@ -185,5 +192,5 @@ function ManageProducts() {
     </div>
   );
 }
-
+ 
 export default ManageProducts;

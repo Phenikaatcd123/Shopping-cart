@@ -2,9 +2,6 @@ import { memo, useCallback, useMemo } from "react";
 import type { CartItem as CartItemType } from "../types/product";
 import { useCart } from "../context/CartContext";
 
-/* =======================
- * CART ITEM COMPONENT
- * ======================= */
 interface CartItemProps {
   item: CartItemType;
 }

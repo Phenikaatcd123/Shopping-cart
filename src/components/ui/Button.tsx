@@ -1,32 +1,78 @@
-import type { ReactNode } from "react";
+import type { ReactNode, ButtonHTMLAttributes } from "react";
+import clsx from "clsx";
 
-interface ButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: "primary" | "danger" | "ghost";
+
+  variant?: "primary" | "danger" | "ghost" | "outline";
+
   size?: "sm" | "md" | "lg";
-  disabled?: boolean;
-  onClick?: () => void;
-  type?: "button" | "submit" | "reset";
+
+  loading?: boolean;
+
+  fullWidth?: boolean;
+
+  className?: string;
+
+  icon?: ReactNode;
 }
 
 export default function Button({
   children,
   variant = "primary",
   size = "md",
+  loading = false,
+  fullWidth = false,
   disabled = false,
-  onClick,
-  type = "button"
+  className,
+  icon,
+  type = "button",
+  ...props
 }: ButtonProps) {
   return (
     <button
       type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`btn btn-${variant} btn-${size} ${
-        disabled ? "btn-disabled" : ""
-      }`}
+      disabled={disabled || loading}
+      className={clsx(
+        "btn",
+
+        // Variant
+        {
+          "btn-primary": variant === "primary",
+          "btn-danger": variant === "danger",
+          "btn-ghost": variant === "ghost",
+          "btn-outline": variant === "outline",
+        },
+
+        // Size
+        {
+          "btn-sm": size === "sm",
+          "btn-md": size === "md",
+          "btn-lg": size === "lg",
+        },
+
+        // Full width
+        {
+          "btn-full": fullWidth,
+        },
+
+        // Disabled
+        {
+          "btn-disabled": disabled || loading,
+        },
+
+        className
+      )}
+      {...props}
     >
-      {children}
+      {/* Loading */}
+      {loading && <span className="btn-spinner" />}
+
+      {/* Icon */}
+      {!loading && icon && <span className="btn-icon">{icon}</span>}
+
+      {/* Text */}
+      <span>{children}</span>
     </button>
   );
 }
